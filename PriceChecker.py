@@ -38,7 +38,7 @@ def get_graph():
 
         font = {'size': 14}
         xticks = [date[0]]
-        plt.figure(figsize=(10, 5))
+        plt.figure(figsize=(10, 5), num=f'{selected_item}')
         plt.plot(date, price)
         plt.yticks([])
         plt.ylabel('Price', fontdict=font)
@@ -83,8 +83,7 @@ getButton = Button(frame, text='Построить график', command=get_gr
 logo = PhotoImage(file='logo.png', format='png')
 logolabel = Label(frame, image=logo)
 
-
-logolabel.place(x=50, y=10)
+logolabel.place(x=80, y=10)
 productText.pack()
 productField.pack()
 getButton.place(x=295, y=50)
