@@ -34,20 +34,39 @@ def get_graph():
                 for row in reader:
                     if row[0] == selected_item:
                         date.append(tab.strip('.csv'))
-                        price.append(row[1].strip())
-        fig, ax = plt.subplots()
-        ax.plot(date, price)
-        ax.set(xlabel='Date', ylabel='Price', title=f'{selected_item}')
+                        price.append(float(row[1].strip()))
+
+        font = {'size': 14}
+        xticks = [date[0]]
+        plt.figure(figsize=(10, 5))
+        plt.plot(date, price)
+        plt.yticks([])
+        plt.ylabel('Price', fontdict=font)
+        plt.xlabel('Date', fontdict=font)
+        plt.xticks(size=8, rotation=30)
+        plt.annotate(price[0], (date[0], price[0] + price[0]/500), ha='center', size=8)
+        plt.annotate(price[-1], (date[-1], price[-1]+price[-1]/500), ha='center', size=8)
+        for index, pr in enumerate(price):
+            if int(index) == 0:
+                pass
+            elif pr != price[int(index)-1]:
+                plt.annotate(pr, (date[int(index)], price[int(index)] + price[int(index)]/500), ha='center', size=8)
+                xticks.append(date[int(index)])
+        xticks.append(date[-1])
+        plt.xticks(xticks)
+        plt.title(f'{selected_item}')
         plt.show()
     except:
         pass
 
-BG = 'light blue'
+
+BG = 'white'
 window = Tk()
 
 window.title('SamBeriPriceChecker')
 window.geometry('700x300')
 window.resizable(width=False, height=False)
+window.iconbitmap('logo1.ico')
 
 canvas = Canvas(window, width=700, height=300)
 canvas.pack()
@@ -61,7 +80,11 @@ products = Listbox(frame, bg=BG, selectmode=SINGLE, width=110, height=10)
 scrollbar = Scrollbar(products, command=products.yview)
 products.config(yscrollcommand=scrollbar.set)
 getButton = Button(frame, text='Построить график', command=get_graph)
+logo = PhotoImage(file='logo.png', format='png')
+logolabel = Label(frame, image=logo)
 
+
+logolabel.place(x=50, y=10)
 productText.pack()
 productField.pack()
 getButton.place(x=295, y=50)
