@@ -1,5 +1,5 @@
 from tkinter import *
-import csv, datetime, os
+import csv, os
 import matplotlib.pyplot as plt
 
 
@@ -41,16 +41,16 @@ def get_graph():
         plt.figure(figsize=(10, 5), num=f'{selected_item}')
         plt.plot(date, price)
         plt.yticks([])
-        plt.ylabel('Price', fontdict=font)
-        plt.xlabel('Date', fontdict=font)
+        plt.ylabel('Цена', fontdict=font)
+        plt.xlabel('Дата', fontdict=font)
         plt.xticks(size=8, rotation=30)
-        plt.annotate(price[0], (date[0], price[0] + price[0]/500), ha='center', size=8)
-        plt.annotate(price[-1], (date[-1], price[-1]+price[-1]/500), ha='center', size=8)
+        plt.annotate(price[0], (date[0], price[0]), ha='center', size=8)
+        plt.annotate(price[-1], (date[-1], price[-1]), ha='center', size=8)
         for index, pr in enumerate(price):
             if int(index) == 0:
                 pass
             elif pr != price[int(index)-1]:
-                plt.annotate(pr, (date[int(index)], price[int(index)] + price[int(index)]/500), ha='center', size=8)
+                plt.annotate(pr, (date[int(index)], price[int(index)]), ha='center', size=8)
                 xticks.append(date[int(index)])
         xticks.append(date[-1])
         plt.xticks(xticks)
@@ -63,7 +63,7 @@ def get_graph():
 BG = 'white'
 window = Tk()
 
-window.title('SamBeriPriceChecker')
+window.title('SamBeri Price Analyzer')
 window.geometry('700x300')
 window.resizable(width=False, height=False)
 window.iconbitmap('logo1.ico')
@@ -77,7 +77,7 @@ productField = Entry(frame, bg=BG, width=40)
 productField.bind('<KeyRelease>', get_product)
 productText = Label(frame, text='Введите название продукта', bg=BG)
 products = Listbox(frame, bg=BG, selectmode=SINGLE, width=110, height=10)
-scrollbar = Scrollbar(products, command=products.yview)
+scrollbar = Scrollbar(products, command=products.yview, width=15)
 products.config(yscrollcommand=scrollbar.set)
 getButton = Button(frame, text='Построить график', command=get_graph)
 logo = PhotoImage(file='logo.png', format='png')
@@ -89,5 +89,6 @@ productField.pack()
 getButton.place(x=295, y=50)
 products.place(height=200, width=680, x=10, y=90)
 scrollbar.pack(side=RIGHT, fill=Y)
+
 window.mainloop()
 
