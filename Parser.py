@@ -55,7 +55,7 @@ def parse():
             sleep(randint(3, 5))
             print(f'\nСпаршено категорий товаров: {num}')
 
-        with open(f'data/{date.today()}.csv', 'w', encoding='utf-8-sig', newline='') as csvtab:
+        with open(f'data/{date.today().strftime("%d-%m-%Y")}.csv', 'w', encoding='utf-8-sig', newline='') as csvtab:
             writer = csv.writer(csvtab, delimiter=',')
             for product in all_products:
                 writer.writerow([product[0], product[1]])
