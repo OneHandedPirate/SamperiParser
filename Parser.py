@@ -6,16 +6,12 @@ from random import randint
 from datetime import date
 
 
-try:
-    os.mkdir(f'data/categories/{date.today()}')
-except:
-    pass
-
 def retry(url):
     try:
         retr = requests.get(url, headers=headers).text
         return retr
-    except:
+    except Exception as e:
+        print(e)
         sleep(10)
         retry(url)
 
@@ -57,10 +53,6 @@ def parse():
                 print(f'Страниц в категории {cat.text} спаршено: {page_count}')
                 sleep(randint(1, 3))
             sleep(randint(3, 5))
-            # with open(f'data/categories/{date.today()}/{num} {cat.text.replace("/", " ")}.csv', 'w', encoding='utf-8-sig', newline='') as csvt:
-            #     writer_cat = csv.writer(csvt, delimiter=',')
-            #     for i in cat_list:
-            #         writer_cat.writerow([i[0], i[1]])
             print(f'\nСпаршено категорий товаров: {num}')
 
         with open(f'data/{date.today()}.csv', 'w', encoding='utf-8-sig', newline='') as csvtab:
@@ -69,13 +61,16 @@ def parse():
                 writer.writerow([product[0], product[1]])
 
         input('Press Enter to quit')
-    except:
+    except Exception as ex:
         sleep(10)
         os.system('cls')
+        print('Ошибка: ' + str(ex))
         parse()
 
 
-parse()
+if __name__ == '__main__':
+    parse()
+
 
 
 
