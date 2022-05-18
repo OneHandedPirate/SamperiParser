@@ -38,14 +38,16 @@ def get_graph():
 
         font = {'size': 14}
         xticks = [date[0]]
-        plt.figure(figsize=(10, 5), num=f'{selected_item}')
+        plt.figure(figsize=(10, 6), num=f'{selected_item}')
         plt.plot(date, price)
         plt.yticks([])
+        plt.subplots_adjust(left=0.05, right=0.95, bottom=0.13, top=0.92)
         plt.ylabel('Цена', fontdict=font)
         plt.xlabel('Дата', fontdict=font)
         plt.xticks(size=8, rotation=30)
         plt.annotate(price[0], (date[0], price[0]), ha='center', size=8)
         plt.annotate(price[-1], (date[-1], price[-1]), ha='center', size=8)
+
         for index, pr in enumerate(price):
             if int(index) == 0:
                 pass
