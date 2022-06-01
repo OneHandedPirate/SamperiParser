@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
-import csv, os
+import csv
 from time import sleep
 from random import randint
 from datetime import date
@@ -63,7 +63,6 @@ def parse():
         input('Press Enter to quit')
     except Exception as ex:
         sleep(10)
-        os.system('cls')
         print('Ошибка: ' + str(ex))
         parse()
 
