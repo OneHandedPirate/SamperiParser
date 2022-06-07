@@ -1,6 +1,7 @@
 from tkinter import *
 import csv, os
 import matplotlib.pyplot as plt
+from datetime import datetime
 
 
 pricelist_dir = os.listdir('data')
@@ -35,7 +36,7 @@ def get_graph():
                     if row[0] == selected_item:
                         date.append(tab.strip('.csv'))
                         price.append(float(row[1].strip()))
-
+        date.sort(key=lambda dat: datetime.strptime(dat, "%d-%m-%Y"))
         font = {'size': 14}
         xticks = [date[0]]
         plt.figure(figsize=(10, 6), num=f'{selected_item}')
