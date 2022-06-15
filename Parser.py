@@ -51,7 +51,7 @@ def parse():
                     cat_list.append([name, price])
                 page_count += 1
                 print(f'Страниц в категории {cat.text} спаршено: {page_count}')
-                sleep(randint(1, 3))
+                #sleep(randint(1, 3))
             sleep(randint(3, 5))
             print(f'\nСпаршено категорий товаров: {num}')
 

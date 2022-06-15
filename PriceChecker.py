@@ -1,5 +1,6 @@
 from tkinter import *
-import csv, os
+import csv
+import os
 import matplotlib.pyplot as plt
 from datetime import datetime
 
@@ -37,14 +38,14 @@ def get_graph():
                         date.append(tab.strip('.csv'))
                         price.append(float(row[1].strip()))
         date.sort(key=lambda dat: datetime.strptime(dat, "%d-%m-%Y"))
-        font = {'size': 14}
+        fontsize = {'size': 14}
         xticks = [date[0]]
         plt.figure(figsize=(10, 6), num=f'{selected_item}')
         plt.plot(date, price)
         plt.yticks([])
         plt.subplots_adjust(left=0.05, right=0.95, bottom=0.13, top=0.92)
-        plt.ylabel('Цена', fontdict=font)
-        plt.xlabel('Дата', fontdict=font)
+        plt.ylabel('Цена', fontdict=fontsize)
+        plt.xlabel('Дата', fontdict=fontsize)
         plt.xticks(size=8, rotation=30)
         plt.annotate(price[0], (date[0], price[0]), ha='center', size=8)
         plt.annotate(price[-1], (date[-1], price[-1]), ha='center', size=8)
@@ -59,8 +60,8 @@ def get_graph():
         plt.xticks(xticks)
         plt.title(f'{selected_item}')
         plt.show()
-    except:
-        pass
+    except Exception as e:
+        print(e)
 
 
 BG = 'white'
@@ -94,4 +95,3 @@ products.place(height=200, width=680, x=10, y=90)
 scrollbar.pack(side=RIGHT, fill=Y)
 
 window.mainloop()
-
