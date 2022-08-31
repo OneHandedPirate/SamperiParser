@@ -38,6 +38,8 @@ def get_graph():
                         date.append(tab.strip('.csv'))
                         price.append(float(row[1].strip()))
         date.sort(key=lambda dat: datetime.strptime(dat, "%d-%m-%Y"))
+        # date = date[::7]
+        # price = price[::7]
         fontsize = {'size': 14}
         xticks = [date[0]]
         plt.figure(figsize=(10, 6), num=f'{selected_item}')
