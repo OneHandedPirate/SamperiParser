@@ -3,6 +3,7 @@ import csv
 import asyncio
 import aiohttp
 from datetime import date
+from time import time
 
 
 URL = 'https://shop.samberi.com'
@@ -16,6 +17,8 @@ HEADERS = {
 
 all_products = []
 n = 0
+
+start_time = time()
 
 async def get_products(url):
     async with aiohttp.ClientSession() as session:
@@ -53,7 +56,9 @@ def main():
         writer = csv.writer(csvtab, delimiter=',')
         for product in all_products:
             writer.writerow([product[0], product[1]])
-    print(f'\n\nРабота завершена.\nВсего товаров: {len(all_products)}', end='')
+    print(f'\n\nРабота завершена.\nВсего товаров: {len(all_products)}',
+          f'Время выполнения: {round(time() - start_time)} сек.', sep='\n')
+
     input('\n\nНажмите любую клавишу чтобы выйти')
 
 
