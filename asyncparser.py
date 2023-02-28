@@ -6,6 +6,7 @@ import aiohttp
 from bs4 import BeautifulSoup
 
 
+
 URL = 'https://shop.samberi.com'
 
 HEADERS = {
@@ -15,7 +16,6 @@ HEADERS = {
                   'Chrome/101.0.4951.54 Safari/537.36'
 }
 
-all_products = []
 start_time = time()
 n = 0
 
@@ -26,8 +26,8 @@ def progress(step, max_s, elems=30):
 
 
 async def get_products(url):
-
-    async with aiohttp.ClientSession() as session:
+    connector = aiohttp.TCPConnector(limit=8, limit_per_host=8)
+    async with aiohttp.ClientSession(connector=connector) as session:
         res = await session.get(url=url, headers=HEADERS)
         bs = BeautifulSoup(await res.text(), 'lxml')
         cats = [URL + cat.get('href') + '?SHOWALL_1=1'
@@ -39,14 +39,18 @@ async def get_products(url):
             'https://shop.samberi.com/catalog/upakovka/?SHOWALL_1=1'
         ]
         max_s = len(cats)
-        #tasks = [asyncio.create_task(parse_page(session, url, max_s)) for url in cats]
-        tasks = [asyncio.shield(parse_page(session, url, max_s)) for url in cats]
+        tasks = [parse_page(session, url, max_s) for url in cats]
 
-        await asyncio.gather(*tasks)
+        results = await asyncio.gather(*tasks)
+
+        return [product for products in results for product in products]
+
 
 async def parse_page(session, cat_url, max_s):
-    #await asyncio.sleep(abs(r()-0.5))
+    page_products = []
     async with session.get(url=cat_url, headers=HEADERS) as res:
+        if res.status != 200:
+            print(f'Статус: {res.status}\nЧто-то пошло не так...')
         res_text = await res.text()
         pagebs = BeautifulSoup(res_text, 'lxml')
         products_on_page = pagebs.find_all('div', class_='product-item')
@@ -54,27 +58,27 @@ async def parse_page(session, cat_url, max_s):
             name = product.find('div', class_='product-item-title').text.strip()
             price = product.find('span', class_='product-item-price-current')\
                 .text.strip().strip('₽').strip()
-            all_products.append([name, price])
-        global n
+            page_products.append((name, price))
+    global n
     n += 1
     progress(n, max_s)
 
-def main():
+    return page_products
+
+async def main():
     progress(0, 1)
 
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-    asyncio.run(get_products(URL))
+    products = await get_products(URL)
 
     with open(f'data/{date.today().strftime("%d-%m-%Y")}.csv',
               'w', encoding='utf-8-sig', newline='') as csvtab:
         writer = csv.writer(csvtab, delimiter=',')
-        for product in all_products:
+        for product in products:
             writer.writerow([product[0], product[1]])
-    print(f'\n\nРабота завершена.\nВсего товаров: {len(all_products)}',
+    print(f'\n\nРабота завершена.\nВсего товаров: {len(products)}',
           f'Время выполнения: {round(time() - start_time, 2)} сек.', sep='\n')
-
-    input('\n\nНажмите любую клавишу чтобы выйти')
 
 
 if __name__ == '__main__':
-    main()
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    asyncio.run(main())
